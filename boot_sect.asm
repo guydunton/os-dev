@@ -6,22 +6,14 @@ org 0x7c00      ; Set the location for data pointer
 
 start:
 
-    mov bx, HELLO_MSG
-    call print_string
-
-    mov bx, GOODBYE_MSG
-    call print_string
+    mov dx, 0x1fb6
+    call print_hex
 
 end:
     jmp $           ; Loop forever
 
 %include "src/print_string.asm"
-
-HELLO_MSG:
-    db "Hello, World!",0
-
-GOODBYE_MSG:
-    db "Goodbye", 0
+%include "src/print_hex.asm"
 
 ;
 ; Padding and magic BIOS number
