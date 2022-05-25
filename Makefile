@@ -2,7 +2,7 @@
 # $< = first dependency
 # $@ = target file
 
-.PHONY: clean run build
+.PHONY: clean run build setup
 
 # Get all the c files in kernal & drivers
 C_SOURCES = $(wildcard kernal/*.c drivers/*.c)
@@ -32,6 +32,10 @@ build/%.o: boot/%.asm
 
 build/%.bin: boot/%.asm
 	nasm $^ -f bin -o $@
+
+setup:
+	mkdir -p build && \
+	docker build -t gcc-toolchain .
 
 clean:
 	rm build/*

@@ -24,36 +24,15 @@ make run
 
 Because I am developing on a mac I don't have access to the GNU toolchain so I am using docker.
 
-For example, to run GCC I'm running the following command:
+To setup the environment run the command:
 
 ```bash
-docker run -v $(pwd):/work -w /work gcc ld -o ./build/basic.bin -Ttext 0x0 --oformat binary ./basic.o
+make setup
 ```
 
-Using the toolchain bash script makes this easier. e.g:
+This will generate the docker image needed to build the system & create the build directory. This command can take several minutes to build to go make some tea.
 
-```bash
-./toolchain ld -o ./build/basic.bin -Ttext 0x0 --oformat binary ./basic.o
-```
-
-## Building the C code
-
-The C code must be:
-
-1. Compiled
-2. Linked
-3. Disassembled to be viewed
-
-```bash
-# Compile the code
-gcc -ffreestanding -c src/basic.c -o ./build/basic.o
-
-# Link the binary
-ld -o ./build/basic.bin -Ttext 0x0 --oformat binary ./build/basic.o
-
-# Disassemble
-ndisasm -b 32 ./build/basic.bin > basic.dis
-```
+Once the environment is built you can run the make commands above.
 
 ## Resources
 
