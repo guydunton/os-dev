@@ -1,25 +1,28 @@
-files := boot_sect.asm src/*.asm src/*.c
+# $^ = all dependencies
+# $< = first dependency
+# $@ = target file
+
 .PHONY: clean run build
 
 build: build/os-image.bin
 
-build/kernal.o:
-	./toolchain i386-elf-gcc -ffreestanding -c ./src/kernal.c  -o ./build/kernal.o
+build/kernal.o: src/kernal.c
+	./toolchain i386-elf-gcc -ffreestanding -c $^  -o $@
 
-build/kernal_entry.o:
-	nasm kernal_entry.asm -f elf -o build/kernal_entry.o
+build/kernal_entry.o: kernal_entry.asm
+	nasm $^ -f elf -o $@
 
 build/kernal.bin: build/kernal_entry.o build/kernal.o
-	./toolchain i386-elf-ld -o ./build/kernal.bin -Ttext 0x1000 ./build/kernal_entry.o ./build/kernal.o --oformat binary
+	./toolchain i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
-build/bootsect.bin:
-	nasm boot_sect.asm -f bin -o build/bootsect.bin
+build/bootsect.bin: boot_sect.asm
+	nasm $^ -f bin -o $@
 
-build/os-image.bin: build/kernal.bin build/bootsect.bin
-	cat build/bootsect.bin build/kernal.bin  > build/os-image.bin
+build/os-image.bin: build/bootsect.bin build/kernal.bin
+	cat $^  > $@
 
 clean:
 	rm build/*
 
 run: build/os-image.bin
-	qemu-system-i386 -fda ./build/os-image.bin
+	qemu-system-i386 -fda $<
