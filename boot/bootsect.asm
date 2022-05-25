@@ -20,11 +20,11 @@ KERNAL_OFFSET equ 0x1000    ; Where we will load our kernal
 
     jmp $           ; Loop forever
 
-%include "src/print_string.asm"
-%include "src/print_string_pm.asm"
-%include "src/disk_load.asm"
-%include "src/gdt.asm"
-%include "src/switch_to_pm.asm"
+%include "boot/print_string.asm"
+%include "boot/print_string_pm.asm"
+%include "boot/disk_load.asm"
+%include "boot/gdt.asm"
+%include "boot/switch_to_pm.asm"
 
 [bits 16]
 load_kernal:
