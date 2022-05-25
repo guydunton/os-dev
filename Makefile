@@ -1,14 +1,25 @@
-files := boot_sect.asm src/*.asm
+files := boot_sect.asm src/*.asm src/*.c
 .PHONY: clean run build
 
-build/boot_sect.bin: $(files)
-	mkdir -p build && \
-	nasm boot_sect.asm -f bin -o build/boot_sect.bin
+build: build/os-image.bin
 
-build: build/boot_sect.bin
+build/kernal.o:
+	./toolchain i386-elf-gcc -ffreestanding -c ./src/kernal.c  -o ./build/kernal.o
+
+build/kernal_entry.o:
+	nasm kernal_entry.asm -f elf -o build/kernal_entry.o
+
+build/kernal.bin: build/kernal_entry.o build/kernal.o
+	./toolchain i386-elf-ld -o ./build/kernal.bin -Ttext 0x1000 ./build/kernal_entry.o ./build/kernal.o --oformat binary
+
+build/bootsect.bin:
+	nasm boot_sect.asm -f bin -o build/bootsect.bin
+
+build/os-image.bin: build/kernal.bin build/bootsect.bin
+	cat build/bootsect.bin build/kernal.bin  > build/os-image.bin
 
 clean:
-	rm -f build/boot_sect.bin
+	rm build/*
 
-run: build/boot_sect.bin
-	qemu-system-x86_64 build/boot_sect.bin
+run: build/os-image.bin
+	qemu-system-i386 -fda ./build/os-image.bin
