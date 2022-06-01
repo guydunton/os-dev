@@ -1,8 +1,8 @@
 #ifndef PORTS_H
 
-unsigned char port_byte_in(unsigned short port);
-void port_byte_out(unsigned short port, unsigned char data);
+unsigned char read_port_byte(unsigned short port);
+void write_port_byte(unsigned short port, unsigned char data);
 unsigned short port_word_in(unsigned short port);
-void port_word_out(unsigned short port, unsigned short data);
+void write_port_word(unsigned short port, unsigned short data);
 
 #endif

@@ -90,18 +90,18 @@ int print_char(char character, int col, int row, char attribute_byte) {
 }
 
 int get_cursor_offset() {
-  port_byte_out(REG_SCREEN_CTRL, 14);
-  int offset = port_byte_in(REG_SCREEN_DATA) << 8;
-  port_byte_out(REG_SCREEN_CTRL, 15);
-  offset += port_byte_in(REG_SCREEN_DATA);
+  write_port_byte(REG_SCREEN_CTRL, 14);
+  int offset = read_port_byte(REG_SCREEN_DATA) << 8;
+  write_port_byte(REG_SCREEN_CTRL, 15);
+  offset += read_port_byte(REG_SCREEN_DATA);
 }
 
 void set_cursor_offset(int offset) {
   offset /= 2;
-  port_byte_out(REG_SCREEN_CTRL, 14);
-  port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset >> 8));
-  port_byte_out(REG_SCREEN_CTRL, 15);
-  port_byte_out(REG_SCREEN_DATA, (unsigned char)(offset & 0xff));
+  write_port_byte(REG_SCREEN_CTRL, 14);
+  write_port_byte(REG_SCREEN_DATA, (unsigned char)(offset >> 8));
+  write_port_byte(REG_SCREEN_CTRL, 15);
+  write_port_byte(REG_SCREEN_DATA, (unsigned char)(offset & 0xff));
 }
 
 int get_screen_offset(int col, int row) {
